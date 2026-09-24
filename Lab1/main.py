@@ -40,17 +40,22 @@ def parse_profiles(filename: str) -> list[list[str]]:
 
 def is_valid_email(email_str: str) -> bool:
     """
-    Проверяет корректность формата email по регулярному выражению.
-
-    Правила:
-    - Локальная часть: A-Z, a-z, 0-9, ., _, %, +, - (от 1 до 64 символов).
-    - Домены: gmail.com, mail.ru, yandex.ru.
-
-    :param email_str: Строка с почтой.
-    :return: True, если почта валидна, иначе False.
+    Проверяет корректность формата email.
     """
     pattern: str = r'^[A-Za-z0-9._%+-]{1,64}@(gmail\.com|mail\.ru|yandex\.ru)$'
     return bool(re.match(pattern, email_str))
+
+
+def is_email_attempt(contact_str: str) -> bool:
+    """
+    Определяет, является ли строка попыткой ввода email 
+    (а не телефона или чего-то другого).
+    
+    Признаки email:
+    - Содержит символ '@'
+    - ИЛИ содержит буквы латинского алфавита (A-Z, a-z)
+    """
+    return bool(re.search(r'[@a-zA-Z]', contact_str))
 
 
 def print_invalid_profiles(invalid_profiles: list[list[str]]) -> None:
@@ -90,10 +95,10 @@ def process_profiles(
     profiles: list[list[str]],
 ) -> tuple[list[list[str]], list[list[str]]]:
     """
-    Фильтрует анкеты: разделяет их на валидные и с некорректной почтой.
+    Разделяет анкеты на корректные и содержащие некорректную почту.
 
-    :param profiles: Все анкеты из файла.
-    :return: Кортеж (невалидные_анкеты, валидные_анкеты).
+    :param profiles: Список анкет.
+    :return: Кортеж (невалидные_почты, остальные_анкеты).
     """
     invalid_email_profiles: list[list[str]] = []
     valid_profiles: list[list[str]] = []
@@ -101,12 +106,16 @@ def process_profiles(
     for profile in profiles:
         contact: str = profile[4]
 
-        if '@' in contact:
-            if not is_valid_email(contact):
-                invalid_email_profiles.append(profile)
-            else:
+        # Если строка похожа на email (есть буквы/символ @)
+        if is_email_attempt(contact):
+            if is_valid_email(contact):
                 valid_profiles.append(profile)
+            else:
+                # Это почта, но у нее некорректный формат
+                invalid_email_profiles.append(profile)
         else:
+            # Если букв и '@' нет — значит это номер телефона (валидный или невалидный)
+            # Его мы в Варианте 19 НЕ трогаем и не удаляем
             valid_profiles.append(profile)
 
     return invalid_email_profiles, valid_profiles
