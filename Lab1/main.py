@@ -80,15 +80,26 @@ def print_invalid_profiles(invalid_profiles: list[list[str]]) -> None:
 
 def save_profiles_to_file(profiles: list[list[str]], output_filename: str) -> None:
     """
-    Сохраняет оставшиеся валидные анкеты в новый файл.
+    Сохраняет список анкет в файл с сохранением исходного формата data.txt.
 
-    :param profiles: Список сохраненных анкет.
+    :param profiles: Список анкет для сохранения.
     :param output_filename: Имя файла для записи.
     """
+    field_labels: list[str] = [
+        "Фамилия",
+        "Имя",
+        "Пол",
+        "Дата рождения",
+        "Номер телефона или email",
+        "Город"
+    ]
+
     with open(output_filename, 'w', encoding='utf-8') as file:
-        for profile in profiles:
-            for line in profile:
-                file.write(f"{line}\n")
+        for idx, profile in enumerate(profiles, start=1):
+            file.write(f"{idx})\n")
+            for label, value in zip(field_labels, profile):
+                file.write(f"{label}: {value}\n")
+            file.write("\n")  # Пустая строка между анкетами
 
 
 def process_profiles(
@@ -106,16 +117,12 @@ def process_profiles(
     for profile in profiles:
         contact: str = profile[4]
 
-        # Если строка похожа на email (есть буквы/символ @)
         if is_email_attempt(contact):
             if is_valid_email(contact):
                 valid_profiles.append(profile)
             else:
-                # Это почта, но у нее некорректный формат
                 invalid_email_profiles.append(profile)
         else:
-            # Если букв и '@' нет — значит это номер телефона (валидный или невалидный)
-            # Его мы в Варианте 19 НЕ трогаем и не удаляем
             valid_profiles.append(profile)
 
     return invalid_email_profiles, valid_profiles
