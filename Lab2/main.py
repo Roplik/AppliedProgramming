@@ -14,7 +14,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print(args.keywords)
-    records = download_sound(args.keywords, args.output, args.count)
+    records = download_sound(args.keywords, args.output, max_size=args.count)
     print(records)
     if records:
         create_annotation_csv(records, args.annotation)

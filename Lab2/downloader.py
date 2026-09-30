@@ -35,7 +35,7 @@ def download_from_link(link: str, save_path: str,name: str, headers: map) -> tup
 
 
 
-def download_sound(keywords: list[str], outpath: str="result", min_size: int=5, max_size: int=5) -> None:
+def download_sound(keywords: list[str], outpath: str="result", min_size: int=30, max_size: int=100) -> None:
     """Ищет и скачивает аудиофайлы с сайта sound-effects.ru по ключевым словам.
 
     Функция последовательно делает запросы к поиску по ключевым словам из списка,
@@ -45,8 +45,8 @@ def download_sound(keywords: list[str], outpath: str="result", min_size: int=5, 
     Args:
         keywords (list[str]): Список ключевых слов для поиска треков.
         outpath (str, optional): Путь к папке сохранения файлов. По умолчанию "result".
-        min_size (int, optional): Минимальное целевое количество найденных ссылок. По умолчанию 5.
-        max_size (int, optional): Максимальное количество файлов для загрузки. По умолчанию 5.
+        min_size (int, optional): Минимальное целевое количество найденных ссылок. По умолчанию 30.
+        max_size (int, optional): Максимальное количество файлов для загрузки. По умолчанию 100.
 
     Returns:
         list[tuple[str, str]]: Список кортежей вида (относительный путь, абсолютный путь)
