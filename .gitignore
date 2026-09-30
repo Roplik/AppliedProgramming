@@ -1,2 +1,4 @@
 /cleaned_data.txt
 .venv/
+__pycache__/
+result/
