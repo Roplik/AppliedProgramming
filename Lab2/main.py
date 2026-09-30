@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     print(args.keywords)
     records = download_sound(args.keywords, args.output, args.count)
-
+    print(records)
     if records:
         create_annotation_csv(records, args.annotation)
 

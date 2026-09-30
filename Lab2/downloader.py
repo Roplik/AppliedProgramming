@@ -17,7 +17,7 @@ def download_from_link(link: str, save_path: str,name: str, headers: map) -> tup
         скачивания, либо None в случае ошибки HTTP-запроса (код ответа != 200).
     """
     filename = os.path.join(save_path, f"sound_{name}.mp3")
-    rel_path = os.path.join(save_path, filename)
+    rel_path = filename
     abs_path = os.path.abspath(rel_path)
 
     
